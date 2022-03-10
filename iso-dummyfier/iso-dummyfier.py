@@ -50,13 +50,16 @@ for isoFile in fileList:
     else:
         dummy_list[isoFile] = {}
         for dummyFile in filesToConvertIntoDummy:
-            file_stat = iso.stat(dummyFile)
+            try:
+                file_stat = iso.stat(dummyFile)
 
-            if file_stat:
-                dummy_list[isoFile][dummyFile] = {
-                    "file_position": file_stat["LSN"] * 2048,
-                    "file_size": file_stat["size"]
-                }
+                if file_stat:
+                    dummy_list[isoFile][dummyFile] = {
+                        "file_position": file_stat["LSN"] * 2048,
+                        "file_size": file_stat["size"]
+                    }
+            except Exception as e:
+                print(f"Error searching the file {dummyFile} in {isoFile}")
 
         iso.close()
 
